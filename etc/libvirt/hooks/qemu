@@ -1,0 +1,36 @@
+#!/bin/bash
+export DISPLAY=0.0
+
+# Replace this with the name of your VM
+vm_name="win11"
+
+# Replace these with your xrandr output names
+hdmi_output="HDMI-1"
+dp_output="DP-1"
+
+# Monitor positions and resolutions
+hdmi_position="3840x2160+0+0"
+dp_position="2560x1440+3840+431"
+
+if [ "$1" = "$vm_name" ]; then
+    case "$2" in
+        started)
+            # VM is started; set DP-1 as primary and turn off HDMI-1
+            xrandr --output "$hdmi_output" --off
+            xrandr --output "$dp_output" --primary --mode 2560x1440 --pos 3840x431
+            # Lock CPU cores to VM schema
+            systemctl set-property --runtime -- system.slice AllowedCPUs=4,5,10,11
+            systemctl set-property --runtime -- user.slice AllowedCPUs=4,5,10,11
+            systemctl set-property --runtime -- init.scope AllowedCPUs=4,5,10,11
+            ;;
+        stopped)
+            # unlock CPU cores to VM schema
+            systemctl set-property --runtime -- system.slice AllowedCPUs=0-11
+            systemctl set-property --runtime -- user.slice AllowedCPUs=0-11
+            systemctl set-property --runtime -- init.scope AllowedCPUs=0-11
+            # VM is stopped; revert monitor settings
+            xrandr --output "$hdmi_output" --primary --mode 3840x2160 --pos 0x0
+            xrandr --output "$dp_output" --mode 2560x1440 --pos 3840x431
+            ;;
+    esac
+fi
