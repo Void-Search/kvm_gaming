@@ -1,8 +1,10 @@
 #!/bin/bash
 
-LOGFILE="$(dirname "$0")/passthrough.log"
+LOGFILE="/var/log/passthrough/passthrough.log"
 
 echo_log() {
+    mkdir -p /var/log/passthrough/
+    rm -f /var/log/passthrough/passthrough.log
     echo "$@" | tee -a "$LOGFILE"
 }
 
