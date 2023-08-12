@@ -46,11 +46,12 @@ nmcli connection up br1
 nmcli connection up tap1
 
 
-# Allocate 8192 2 MiB hugepages for the VM
-HUGEPAGES=8192
+# Allocate 8192 2 MiB hugepages for the VM, 0 for the moment will try transparent hugepages.
+HUGEPAGES=0
 # Create hugepages
-echo "vm.nr_hugepages = $HUGEPAGES" | sudo tee /etc/sysctl.d/60-hugepages.conf
-sudo sysctl -p /etc/sysctl.d/60-hugepages.conf
+#echo "vm.nr_hugepages = $HUGEPAGES" | sudo tee /etc/sysctl.d/60-hugepages.conf
+#sudo sysctl -p /etc/sysctl.d/60-hugepages.conf
+echo always > /sys/kernel/mm/transparent_hugepage/enabled
 
 # Check if the memory limits are already set
 if grep -q "memlock" /etc/security/limits.conf; then

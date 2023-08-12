@@ -9,6 +9,8 @@ echo_log() {
 }
 
 enable_passthrough() {
+
+    
     echo_log "Enabling passthrough..."
 
     # Backup original configuration files
