@@ -8,11 +8,6 @@
   </metadata>
   <memory unit="KiB">16384000</memory>
   <currentMemory unit="KiB">16384000</currentMemory>
-  <memoryBacking>
-    <hugepages>
-      <page size="2048" unit="KiB"/>
-    </hugepages>
-  </memoryBacking>
   <vcpu placement="static">8</vcpu>
   <iothreads>2</iothreads>
   <cputune>
@@ -53,8 +48,10 @@
     <vmport state="off"/>
   </features>
   <cpu mode="host-passthrough" check="none" migratable="on">
+    <model fallback='allow'/>
     <topology sockets="1" dies="1" cores="4" threads="2"/>
     <feature policy="require" name="topoext"/>
+    <cache mode='passthrough'/>
   </cpu>
   <clock offset="localtime">
     <timer name="rtc" tickpolicy="catchup"/>
@@ -72,7 +69,7 @@
   <devices>
     <emulator>/usr/bin/qemu-system-x86_64</emulator>
     <disk type="file" device="disk">
-      <driver name="qemu" type="raw" cache="writeback" discard="unmap" iothread="1"/>
+      <driver name="qemu" type="raw" cache="none" discard="unmap" iothread="1"/>
       <source file="/home/timbo/kvm_vms/kvm_images/win11.img"/>
       <target dev="vda" bus="virtio"/>
       <boot order="2"/>
@@ -166,6 +163,7 @@
       <address type="pci" domain="0x0000" bus="0x03" slot="0x00" function="0x0"/>
     </controller>
     <interface type="network">
+      <driver name='vhost' queues='4'/>
       <mac address="52:54:00:cc:08:de"/>
       <source network="default"/>
       <model type="virtio"/>
@@ -218,22 +216,7 @@
       </source>
       <address type="pci" domain="0x0000" bus="0x06" slot="0x00" function="0x0"/>
     </hostdev>
-    <hostdev mode="subsystem" type="usb" managed="yes">
-      <source>
-        <vendor id="0x045e"/>
-        <product id="0x0b12"/>
-      </source>
-      <address type="usb" bus="0" port="2"/>
-    </hostdev>
-    <hostdev mode="subsystem" type="usb" managed="yes">
-      <source>
-        <vendor id="0x045e"/>
-        <product id="0x070f"/>
-      </source>
-      <address type="usb" bus="0" port="3"/>
-    </hostdev>
     <watchdog model="itco" action="reset"/>
-    <memballoon model="none">
-    </memballoon>
+    <memballoon model="none"/>
   </devices>
 </domain>

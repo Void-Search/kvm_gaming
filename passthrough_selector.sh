@@ -8,6 +8,12 @@ echo_log() {
     echo "$@" | tee -a "$LOGFILE"
 }
 
+
+test_log() {
+    echo_log "This is a test log message"
+}
+
+
 enable_passthrough() {
 
     
