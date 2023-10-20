@@ -17,7 +17,7 @@ sed -i "${GRUB_LINE}s/\"$/ amd_iommu=on vfio-pci.ids=1002:67df,1002:aaf0\"/" $GR
 grub-mkconfig -o /boot/grub/grub.cfg
 
 # Create and configure vfio.conf
-echo "options vfio-pci ids=1002:67df,1002:aaf0" > /etc/modprobe.d/vfio.conf
+echo "options vfio-pci ids=1002:67df,1002:aaf0" >/etc/modprobe.d/vfio.conf
 
 # Add vfio-pci to MODULES in mkinitcpio.conf deso
 sed -i '/^MODULES=/ s/"$/ vfio-pci"/' /etc/mkinitcpio.conf
@@ -34,8 +34,6 @@ nmcli connection add type bridge-slave ifname wlp37s0 con-name wlp37s0 master br
 nmcli connection add type tun ifname tap1_vm con-name tap1_vm mode tap owner $(id -u) group $(id -g)
 nmcli connection modify tap1_vm connection.slave-type bridge connection.master br1
 
-
-
 # Set up internet connection sharing with the wireless interface
 nmcli connection modify br1 ipv4.method shared
 nmcli connection modify br1 ipv4.addresses 192.168.100.1/24
@@ -45,13 +43,12 @@ nmcli connection modify br1 ipv4.gateway 192.168.100.1
 nmcli connection up br1
 nmcli connection up tap1
 
-
 # Allocate 8192 2 MiB hugepages for the VM, 0 for the moment will try transparent hugepages.
-HUGEPAGES=0
+HUGEPAGES=8192
 # Create hugepages
-#echo "vm.nr_hugepages = $HUGEPAGES" | sudo tee /etc/sysctl.d/60-hugepages.conf
-#sudo sysctl -p /etc/sysctl.d/60-hugepages.conf
-echo always > /sys/kernel/mm/transparent_hugepage/enabled
+echo "vm.nr_hugepages = $HUGEPAGES" | sudo tee /etc/sysctl.d/60-hugepages.conf
+sudo sysctl -p /etc/sysctl.d/60-hugepages.conf
+echo never >/sys/kernel/mm/transparent_hugepage/enabled
 
 # Check if the memory limits are already set
 if grep -q "memlock" /etc/security/limits.conf; then
@@ -60,8 +57,8 @@ if grep -q "memlock" /etc/security/limits.conf; then
     sed -i 's/.*hard memlock.*/\* hard memlock unlimited/' /etc/security/limits.conf
 else
     echo "Adding new memlock limits to /etc/security/limits.conf"
-    echo "* soft memlock unlimited" >> /etc/security/limits.conf
-    echo "* hard memlock unlimited" >> /etc/security/limits.conf
+    echo "* soft memlock unlimited" >>/etc/security/limits.conf
+    echo "* hard memlock unlimited" >>/etc/security/limits.conf
 fi
 
 echo "Changes have been made to /etc/security/limits.conf"
