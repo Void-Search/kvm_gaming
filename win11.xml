@@ -9,10 +9,8 @@
   <memory unit="KiB">16384000</memory>
   <currentMemory unit="KiB">16384000</currentMemory>
   <memoryBacking>
-  <hugepages>
-    <page size="2048" unit="MiB"/>
-  </hugepages>
-</memoryBacking>
+    <hugepages/>
+  </memoryBacking>
   <vcpu placement="static">8</vcpu>
   <iothreads>2</iothreads>
   <cputune>
@@ -53,10 +51,9 @@
     <vmport state="off"/>
   </features>
   <cpu mode="host-passthrough" check="none" migratable="on">
-    <model fallback='allow'/>
     <topology sockets="1" dies="1" cores="4" threads="2"/>
+    <cache mode="passthrough"/>
     <feature policy="require" name="topoext"/>
-    <cache mode='passthrough'/>
   </cpu>
   <clock offset="localtime">
     <timer name="rtc" tickpolicy="catchup"/>
@@ -168,10 +165,10 @@
       <address type="pci" domain="0x0000" bus="0x03" slot="0x00" function="0x0"/>
     </controller>
     <interface type="network">
-      <driver name='vhost' queues='4'/>
       <mac address="52:54:00:cc:08:de"/>
       <source network="default"/>
       <model type="virtio"/>
+      <driver name="vhost" queues="4"/>
       <address type="pci" domain="0x0000" bus="0x01" slot="0x00" function="0x0"/>
     </interface>
     <serial type="pty">
