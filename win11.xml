@@ -165,7 +165,7 @@
       <address type="pci" domain="0x0000" bus="0x03" slot="0x00" function="0x0"/>
     </controller>
     <interface type="network">
-      <mac address="52:54:00:cc:08:de"/>
+      <mac address="d8:bb:c1:15:a2:41"/>
       <source network="default"/>
       <model type="virtio"/>
       <driver name="vhost" queues="4"/>
@@ -183,9 +183,6 @@
       <address type="usb" bus="0" port="1"/>
     </input>
     <input type="evdev">
-      <source dev="/dev/input/by-id/usb-Logitech_G502_HERO_Gaming_Mouse_0B7438623232-event-mouse"/>
-    </input>
-    <input type="evdev">
       <source dev="/dev/input/by-id/usb-Logitech_USB_Receiver-if02-event-mouse" grab="all" grabToggle="ctrl-ctrl" repeat="on"/>
     </input>
     <input type="mouse" bus="virtio">
@@ -201,6 +198,9 @@
     </input>
     <input type="keyboard" bus="virtio">
       <address type="pci" domain="0x0000" bus="0x0c" slot="0x00" function="0x0"/>
+    </input>
+    <input type="evdev">
+      <source dev="/dev/input/by-id/usb-Logitech_USB_Receiver-if01-event-mouse"/>
     </input>
     <sound model="ich9">
       <address type="pci" domain="0x0000" bus="0x00" slot="0x1b" function="0x0"/>
