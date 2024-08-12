@@ -7,7 +7,6 @@ This project aims to provide a seamless gaming experience using Kernel-based Vir
 - [Features](#features)
 - [Installation](#installation)
 - [Usage](#usage)
-- [Contributing](#contributing)
 - [License](#license)
 
 ## Introduction
